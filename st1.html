@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Stopwatch and Gradient Shapes</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container for the shapes */
+        .shapes-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        /* General styling for shapes */
+        .circle, .half-circle {
+            margin: 20px;
+        }
+
+        /* Styling for the circle with gradient */
+        .circle {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #ff7e5f, #feb47b);
+            border-radius: 50%;
+        }
+
+        /* Styling for the half-circle with gradient */
+        .half-circle {
+            width: 150px;
+            height: 75px;
+            background: linear-gradient(to bottom, #6a11cb, #2575fc);
+            border-radius: 75px 75px 0 0;
+        }
+
+        /* Styling for the stopwatch container */
+        .stopwatch {
+            text-align: center;
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        /* Styling for the display of the stopwatch */
+        .display {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Styling for buttons */
+        .buttons button {
+            font-size: 1em;
+            padding: 12px 25px;
+            margin: 5px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            background-color: #ff7e5f;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        /* Hover effect for buttons */
+        .buttons button:hover {
+            background-color: #feb47b;
+            transform: translateY(-3px);
+        }
+
+        /* Active state for buttons */
+        .buttons button:active {
+            background-color: #ff6347;
+        }
+
+        /* Styling for the laps container */
+        .laps {
+            margin-top: 20px;
+            max-height: 100px;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        /* Styling for each lap entry */
+        .lap {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* Styling for scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        /* Track styling for scrollbar */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Thumb styling for scrollbar */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        /* Hover effect for scrollbar thumb */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container for shapes -->
+    <div class="shapes-container">
+        <!-- Circle shape -->
+        <div class="circle"></div>
+        <!-- Half-circle shape -->
+        <div class="half-circle"></div>
+    </div>
+
+    <!-- Stopwatch container -->
+    <div class="stopwatch">
+        <!-- Display for the stopwatch time -->
+        <div class="display">00:00:00</div>
+        <!-- Buttons for stopwatch controls -->
+        <div class="buttons">
+            <button onclick="startStopwatch()">Start</button>
+            <button onclick="pauseStopwatch()">Pause</button>
+            <button onclick="resetStopwatch()">Reset</button>
+            <button onclick="lapStopwatch()">Lap</button>
+        </div>
+        <!-- Container for lap times -->
+        <div class="laps"></div>
+    </div>
+
+    <script>
+        // Timer variable
+        let timer;
+        // Variable to keep track of seconds elapsed
+        let seconds = 0;
+        // Flag to check if the stopwatch is running
+        let isRunning = false;
+
+        // Function to start the stopwatch
+        function startStopwatch() {
+            if (!isRunning) {
+                isRunning = true;
+                timer = setInterval(updateDisplay, 1000);
+            }
+        }
+
+        // Function to pause the stopwatch
+        function pauseStopwatch() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(timer);
+            }
+        }
+
+        // Function to reset the stopwatch
+        function resetStopwatch() {
+            isRunning = false;
+            clearInterval(timer);
+            seconds = 0;
+            document.querySelector('.display').textContent = '00:00:00';
+            document.querySelector('.laps').innerHTML = '';
+        }
+
+        // Function to record a lap time
+        function lapStopwatch() {
+            if (isRunning) {
+                const lapTime = formatTime(seconds);
+                const lapElement = document.createElement('div');
+                lapElement.textContent = lapTime;
+                lapElement.className = 'lap';
+                document.querySelector('.laps').appendChild(lapElement);
+            }
+        }
+
+        // Function to update the display every second
+        function updateDisplay() {
+            seconds++;
+            document.querySelector('.display').textContent = formatTime(seconds);
+        }
+
+        // Function to format the time as HH:MM:SS
+        function formatTime(seconds) {
+            const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const secs = String(seconds % 60).padStart(2, '0');
+            return `${hrs}:${mins}:${secs}`;
+        }
+    </script>
+</body>
+</html>
